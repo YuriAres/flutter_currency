@@ -12,6 +12,11 @@ class Myapp extends StatefulWidget {
 
 class _MyappState extends State<Myapp> {
   TextEditingController firstText = TextEditingController();
+  List<String> moedas = ["Dólar", "Real", "Libra", "Euro"];
+  String? valorE = "Real";
+  String? valorF = "Dólar";
+  FlagsCode iconvalue1 = FlagsCode.BR;
+  FlagsCode iconvalue2 = FlagsCode.US;
 
   @override
   Widget build(BuildContext context) {
@@ -93,17 +98,80 @@ class _MyappState extends State<Myapp> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.sizeOf(context).height * 0.04,
+              height: MediaQuery.sizeOf(context).height * 0.042,
             ),
             Widgets().customtextfield(
                 firstText,
-                FlagsCode.BR,
+                iconvalue1,
                 MediaQuery.sizeOf(context).height * 0.046,
                 MediaQuery.sizeOf(context).width * 0.2,
-                "Insira o Valor aqui")
+                "Insira o Valor aqui"),
+            SizedBox(
+              height: MediaQuery.sizeOf(context).height * 0.042,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Widgets().customDropDownButton(
+                    MediaQuery.sizeOf(context).width,
+                    MediaQuery.sizeOf(context).height * 0.027,
+                    valorE,
+                    moedas, (selection) {
+                  setState(() {
+                    valorE = selection;
+                    print("Valor 1: $valorE");
+                    iconvalue1 = changeFlag(valorE);
+                  });
+                }),
+                const Icon(
+                  Icons.swap_horiz,
+                  size: 42,
+                  color: Color(0xff4F6367),
+                ),
+                Widgets().customDropDownButton(
+                    MediaQuery.sizeOf(context).width,
+                    MediaQuery.sizeOf(context).height * 0.027,
+                    valorF,
+                    moedas, (selection) {
+                  setState(() {
+                    valorF = selection;
+                    print("Valor 2: $valorF");
+                    iconvalue2 = changeFlag(valorF);
+                  });
+                }),
+              ],
+            ),
+            SizedBox(
+              height: MediaQuery.sizeOf(context).height * 0.042,
+            ),
+            Widgets().customtextfield(
+                firstText,
+                iconvalue2,
+                MediaQuery.sizeOf(context).height * 0.046,
+                MediaQuery.sizeOf(context).width * 0.2,
+                "0.00"),
+            SizedBox(
+              height: MediaQuery.sizeOf(context).height * 0.06,
+            ),
+            ElevatedButton(onPressed: () {}, child: Text("Converter"))
           ],
         ),
       )),
     );
+  }
+}
+
+FlagsCode changeFlag(String? value) {
+  switch (value) {
+    case "Real":
+      return FlagsCode.BR;
+    case "Dólar":
+      return FlagsCode.US;
+    case "Euro":
+      return FlagsCode.EU;
+    case "Libra":
+      return FlagsCode.GB;
+    default:
+      return FlagsCode.AC;
   }
 }
