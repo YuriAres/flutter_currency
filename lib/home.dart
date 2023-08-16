@@ -13,9 +13,10 @@ class Myapp extends StatefulWidget {
 
 class _MyappState extends State<Myapp> {
   TextEditingController firstText = TextEditingController();
-  List<String> moedas = ["Dólar", "Real", "Libra", "Euro"];
-  String? valorE = "Real";
-  String? valorF = "Dólar";
+  TextEditingController secondText = TextEditingController();
+  List<String> moedas = ["USD", "BRL", "GBP", "EUR"];
+  String? valorE = "BRL";
+  String? valorF = "USD";
   FlagsCode iconvalue1 = FlagsCode.BR;
   FlagsCode iconvalue2 = FlagsCode.US;
   late Future<Map> map;
@@ -169,7 +170,8 @@ class _MyappState extends State<Myapp> {
                                   iconvalue1,
                                   MediaQuery.sizeOf(context).height * 0.046,
                                   MediaQuery.sizeOf(context).width * 0.2,
-                                  "Insira o Valor aqui"),
+                                  "Insira o Valor aqui",
+                                  true),
                               SizedBox(
                                 height:
                                     MediaQuery.sizeOf(context).height * 0.042,
@@ -212,11 +214,12 @@ class _MyappState extends State<Myapp> {
                                     MediaQuery.sizeOf(context).height * 0.042,
                               ),
                               Widgets().customtextfield(
-                                  firstText,
+                                  secondText,
                                   iconvalue2,
                                   MediaQuery.sizeOf(context).height * 0.046,
                                   MediaQuery.sizeOf(context).width * 0.2,
-                                  "0.00"),
+                                  "0.00",
+                                  false),
                               SizedBox(
                                 height:
                                     MediaQuery.sizeOf(context).height * 0.06,
@@ -233,7 +236,9 @@ class _MyappState extends State<Myapp> {
                                               borderRadius:
                                                   BorderRadius.circular(10))),
                                       onPressed: () {
-                                        APIComunication().teste();
+                                        secondText.text = convert(valorE,
+                                                valorF, snapshot, firstText)
+                                            .toStringAsFixed(2);
                                       },
                                       child: Text(
                                         "Converter",
@@ -255,15 +260,90 @@ class _MyappState extends State<Myapp> {
 
 FlagsCode changeFlag(String? value) {
   switch (value) {
-    case "Real":
+    case "BRL":
       return FlagsCode.BR;
-    case "Dólar":
+    case "USD":
       return FlagsCode.US;
-    case "Euro":
+    case "EUR":
       return FlagsCode.EU;
-    case "Libra":
+    case "GBP":
       return FlagsCode.GB;
     default:
       return FlagsCode.AC;
   }
+}
+
+double convert(String? value1, String? value2, AsyncSnapshot test,
+    TextEditingController field1) {
+  if (value1 == "BRL") {
+    if (value2 == "BRL") {
+      return double.parse(field1.text);
+    } else {
+      double valueA = double.parse(field1.text);
+      double valueB = test.data!['results']['currencies']["$value2"]['buy'];
+      switch (value2) {
+        case "USD":
+          return valueA / valueB;
+        case "EUR":
+          return valueA / valueB;
+        case "GBP":
+          return valueA / valueB;
+      }
+    }
+  }
+  if (value1 == "USD") {
+    if (value2 == "USD") {
+      return double.parse(field1.text);
+    } else if (value2 == "BRL") {
+      return (test.data!['results']['currencies']["$value1"]['buy']) *
+          double.parse(field1.text);
+    } else {
+      double valueA = double.parse(field1.text);
+      double valueB = test.data!['results']['currencies']["$value2"]['buy'];
+      double valueC = test.data!['results']['currencies']["$value1"]['buy'];
+      switch (value2) {
+        case "EUR":
+          return (valueA * valueC / valueB);
+        case "GBP":
+          return (valueA * valueC / valueB);
+      }
+    }
+  }
+  if (value1 == "EUR") {
+    if (value2 == "EUR") {
+      return double.parse(field1.text);
+    } else if (value2 == "BRL") {
+      return (test.data!['results']['currencies']["$value1"]['buy']) *
+          double.parse(field1.text);
+    } else {
+      double valueA = double.parse(field1.text);
+      double valueB = test.data!['results']['currencies']["$value2"]['buy'];
+      double valueC = test.data!['results']['currencies']["$value1"]['buy'];
+      switch (value2) {
+        case "USD":
+          return (valueA * valueC / valueB);
+        case "GBP":
+          return (valueA * valueC / valueB);
+      }
+    }
+  }
+  if (value1 == "GBP") {
+    if (value2 == "GBP") {
+      return double.parse(field1.text);
+    } else if (value2 == "BRL") {
+      return (test.data!['results']['currencies']["$value1"]['buy']) *
+          double.parse(field1.text);
+    } else {
+      double valueA = double.parse(field1.text);
+      double valueB = test.data!['results']['currencies']["$value2"]['buy'];
+      double valueC = test.data!['results']['currencies']["$value1"]['buy'];
+      switch (value2) {
+        case "USD":
+          return (valueA * valueC / valueB);
+        case "EUR":
+          return (valueA * valueC / valueB);
+      }
+    }
+  }
+  return 2;
 }

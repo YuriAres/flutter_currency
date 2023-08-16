@@ -6,5 +6,9 @@ import 'package:flutter_currency/test.dart';
 
 void main(List<String> args) {
   HttpOverrides.global = MyHttpOverrides();
-  runApp(const MaterialApp(home: Myapp()));
+  runApp(MaterialApp(
+      home: Myapp(),
+      theme: ThemeData(
+        disabledColor: Colors.grey[700],
+      )));
 }

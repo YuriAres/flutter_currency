@@ -4,12 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 class Widgets {
   Widget customtextfield(TextEditingController control, FlagsCode icon,
-      double heightIcon, double widthIcon, String hinttext) {
+      double heightIcon, double widthIcon, String hinttext, bool status) {
     return TextField(
       textAlign: TextAlign.right,
       style: GoogleFonts.openSans(fontSize: 21),
       keyboardType: const TextInputType.numberWithOptions(),
       controller: control,
+      enabled: status,
       decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
@@ -29,6 +30,10 @@ class Widgets {
                   const BorderSide(width: 1.2, color: Color(0xff4F6367)),
               borderRadius: BorderRadius.circular(10)),
           focusedBorder: OutlineInputBorder(
+              borderSide:
+                  const BorderSide(width: 1.2, color: Color(0xff4F6367)),
+              borderRadius: BorderRadius.circular(10)),
+          disabledBorder: OutlineInputBorder(
               borderSide:
                   const BorderSide(width: 1.2, color: Color(0xff4F6367)),
               borderRadius: BorderRadius.circular(10))),
