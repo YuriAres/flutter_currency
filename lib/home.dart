@@ -42,7 +42,10 @@ class _MyappState extends State<Myapp> {
         ),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                firstText.clear();
+                secondText.text = "0.00";
+              },
               icon: Icon(
                 Icons.refresh,
                 size: MediaQuery.sizeOf(context).height * 0.032,
@@ -187,7 +190,6 @@ class _MyappState extends State<Myapp> {
                                       moedas, (selection) {
                                     setState(() {
                                       valorE = selection;
-                                      print("Valor 1: $valorE");
                                       iconvalue1 = changeFlag(valorE);
                                     });
                                   }),
@@ -203,7 +205,6 @@ class _MyappState extends State<Myapp> {
                                       moedas, (selection) {
                                     setState(() {
                                       valorF = selection;
-                                      print("Valor 2: $valorF");
                                       iconvalue2 = changeFlag(valorF);
                                     });
                                   }),
@@ -236,9 +237,34 @@ class _MyappState extends State<Myapp> {
                                               borderRadius:
                                                   BorderRadius.circular(10))),
                                       onPressed: () {
-                                        secondText.text = convert(valorE,
-                                                valorF, snapshot, firstText)
-                                            .toStringAsFixed(2);
+                                        if (firstText.text == "") {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                    "Atenção!",
+                                                    style: GoogleFonts.openSans(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 22),
+                                                  ),
+                                                  content: Text(
+                                                    "Insira um valor válido para continuar!",
+                                                    style: GoogleFonts.openSans(
+                                                        color: Colors.white,
+                                                        fontSize: 20),
+                                                  ),
+                                                  backgroundColor:
+                                                      const Color(0xff7A9E9F),
+                                                );
+                                              });
+                                        } else {
+                                          secondText.text = convert(valorE,
+                                                  valorF, snapshot, firstText)
+                                              .toStringAsFixed(2);
+                                        }
                                       },
                                       child: Text(
                                         "Converter",
@@ -279,7 +305,7 @@ double convert(String? value1, String? value2, AsyncSnapshot test,
     if (value2 == "BRL") {
       return double.parse(field1.text);
     } else {
-      double valueA = double.parse(field1.text);
+      double valueA = double.parse(field1.text.replaceAll(",", "."));
       double valueB = test.data!['results']['currencies']["$value2"]['buy'];
       switch (value2) {
         case "USD":
@@ -298,7 +324,7 @@ double convert(String? value1, String? value2, AsyncSnapshot test,
       return (test.data!['results']['currencies']["$value1"]['buy']) *
           double.parse(field1.text);
     } else {
-      double valueA = double.parse(field1.text);
+      double valueA = double.parse(field1.text.replaceAll(",", "."));
       double valueB = test.data!['results']['currencies']["$value2"]['buy'];
       double valueC = test.data!['results']['currencies']["$value1"]['buy'];
       switch (value2) {
@@ -311,12 +337,12 @@ double convert(String? value1, String? value2, AsyncSnapshot test,
   }
   if (value1 == "EUR") {
     if (value2 == "EUR") {
-      return double.parse(field1.text);
+      return double.parse(field1.text.replaceAll(",", "."));
     } else if (value2 == "BRL") {
       return (test.data!['results']['currencies']["$value1"]['buy']) *
           double.parse(field1.text);
     } else {
-      double valueA = double.parse(field1.text);
+      double valueA = double.parse(field1.text.replaceAll(",", "."));
       double valueB = test.data!['results']['currencies']["$value2"]['buy'];
       double valueC = test.data!['results']['currencies']["$value1"]['buy'];
       switch (value2) {
@@ -329,7 +355,7 @@ double convert(String? value1, String? value2, AsyncSnapshot test,
   }
   if (value1 == "GBP") {
     if (value2 == "GBP") {
-      return double.parse(field1.text);
+      return double.parse(field1.text.replaceAll(",", "."));
     } else if (value2 == "BRL") {
       return (test.data!['results']['currencies']["$value1"]['buy']) *
           double.parse(field1.text);
